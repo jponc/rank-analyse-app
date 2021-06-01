@@ -11,6 +11,7 @@ type Props = {
 
 export const HomeScreen: React.FC<Props> = ({ navigation }) => {
   const handleViewCrawls = () => {
+    navigation.push("Crawls");
   };
 
   return (
