@@ -19,3 +19,29 @@ export type CrawlsScreenNavigationProp = StackNavigationProp<
   RootStackParamList,
   "Crawls"
 >;
+
+export type Crawl = {
+  id: string;
+  keyword: string;
+  searchEngine: string;
+  device: string;
+  done: boolean;
+  createdAt: Date;
+};
+
+export type APICrawl = {
+  id: string;
+  keyword: string;
+  search_engine: string;
+  device: string;
+  done: boolean;
+  created_at: string;
+};
+
+export type GetCrawlsResponse = {
+  data: APICrawl[];
+};
+
+export type GetCrawlResponse = {
+  data: APICrawl;
+}

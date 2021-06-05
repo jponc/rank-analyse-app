@@ -1,12 +1,11 @@
-import React from "react";
-import { View, StyleSheet } from "react-native";
-import { Appbar, Title} from "react-native-paper";
+import React, { useContext, useEffect } from "react";
+import { ScrollView, StyleSheet } from "react-native";
+import { Appbar } from "react-native-paper";
 import Background from "../components/Background";
 import { StatusBarView } from "../components/StatusBarView";
-import {
-  CrawlsScreenNavigationProp,
-  CrawlsScreenRouteProp,
-} from "../types";
+import { CrawlContext } from "../contexts/CrawlContext";
+import { CrawlsScreenNavigationProp, CrawlsScreenRouteProp } from "../types";
+import { CrawlsTable } from "../components/CrawlsTable";
 
 type Props = {
   route: CrawlsScreenRouteProp;
@@ -14,18 +13,26 @@ type Props = {
 };
 
 export const CrawlsScreen: React.FC<Props> = ({ navigation }) => {
+  const { crawls, fetchCrawls } = useContext(CrawlContext);
+
+  useEffect(() => {
+    fetchCrawls();
+  }, []);
+
+  const handleCrawlOnPress = (crawlId: string) => {
+    console.log(crawlId);
+  };
+
   return (
     <StatusBarView>
       <Appbar style={styles.appbar}>
         <Appbar.BackAction onPress={() => navigation.push("Home")} />
-        <Appbar.Content
-          title="Crawls"
-        />
+        <Appbar.Content title="Crawls" />
       </Appbar>
       <Background>
-        <View>
-          <Title>Hello</Title>
-        </View>
+        <ScrollView style={styles.crawlsTableContainer}>
+          <CrawlsTable crawls={crawls} onPress={handleCrawlOnPress} />
+        </ScrollView>
       </Background>
     </StatusBarView>
   );
@@ -37,4 +44,7 @@ const styles = StyleSheet.create({
     right: 0,
     left: 0,
   },
+  crawlsTableContainer: {
+    width: "70%"
+  }
 });
