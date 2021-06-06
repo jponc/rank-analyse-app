@@ -5,7 +5,15 @@
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
-    "eject": "expo eject"
+    "eject": "expo eject",
+
+    "predeploy:staging": "API_BASE_URL=https://api-staging-rankanalyze.appextend.com expo build:web",
+    "deploy:staging": "aws s3 sync web-build/ s3://rankanalyze-staging.appextend.com --profile uptactics",
+    "postdeploy:staging": "aws cloudfront create-invalidation --distribution-id E2YQ9V3LJK9B6S --paths '/*' --profile uptactics",
+
+    "predeploy:production": "API_BASE_URL=https://api-rankanalyze.appextend.com expo build:web",
+    "deploy:production": "aws s3 sync web-build/ s3://rankanalyze.appextend.com --profile uptactics",
+    "postdeploy:production": "aws cloudfront create-invalidation --distribution-id E2OP3T4RW4735G --paths '/*' --profile uptactics"
   },
   "dependencies": {
     "@react-native-async-storage/async-storage": "^1.13.0",
