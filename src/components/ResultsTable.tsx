@@ -47,7 +47,6 @@ export const ResultsTable: React.FC<Props> = ({ results, onPress }) => {
         data={results}
         renderItem={renderItem}
         keyExtractor={(i) => i.id}
-        style={styles.listContainer}
       />
     </DataTable>
   );
@@ -55,10 +54,8 @@ export const ResultsTable: React.FC<Props> = ({ results, onPress }) => {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: theme.colors.surface
-  },
-  listContainer: {
-    height: 700
+    backgroundColor: theme.colors.surface,
+    height: "100%"
   },
   positionColumn: {
     flex: 0.5,
