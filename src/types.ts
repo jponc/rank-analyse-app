@@ -30,6 +30,7 @@ export type CrawlScreenNavigationProp = StackNavigationProp<
   "Crawl"
 >;
 
+// Internal Types
 export type Crawl = {
   id: string;
   keyword: string;
@@ -37,23 +38,6 @@ export type Crawl = {
   device: string;
   done: boolean;
   createdAt: Date;
-};
-
-export type APICrawl = {
-  id: string;
-  keyword: string;
-  search_engine: string;
-  device: string;
-  done: boolean;
-  created_at: string;
-};
-
-export type GetCrawlsResponse = {
-  data: APICrawl[];
-};
-
-export type GetCrawlResponse = {
-  data: APICrawl;
 };
 
 export type Result = {
@@ -68,6 +52,53 @@ export type Result = {
   createdAt: Date;
 };
 
+export type ResultLink = {
+  id: string;
+  resultId: string;
+  text: string;
+  linkUrl: string;
+  createdAt: Date;
+};
+
+export type ResultInfo = {
+  id: string;
+  resultId: string;
+  title: string;
+  content: string;
+  createdAt: Date;
+};
+
+// Response Types
+export type GetCrawlsResponse = {
+  data: APICrawl[];
+};
+
+export type GetCrawlResponse = {
+  data: APICrawl;
+};
+
+export type GetResultsResponse = {
+  data: APIResult[];
+};
+
+export type GetResultInfoResponse = {
+  data: APIResultInfo;
+};
+
+export type GetResultLinksResponse = {
+  data: APIResultLink[];
+};
+
+// API Types
+export type APICrawl = {
+  id: string;
+  keyword: string;
+  search_engine: string;
+  device: string;
+  done: boolean;
+  created_at: string;
+};
+
 export type APIResult = {
   id: string;
   crawl_id: string;
@@ -80,6 +111,18 @@ export type APIResult = {
   created_at: string;
 };
 
-export type GetResultsResponse = {
-  data: APIResult[];
+export type APIResultLink = {
+  id: string;
+  result_id: string;
+  text: string;
+  link_url: string;
+  created_at: string;
+};
+
+export type APIResultInfo = {
+  id: string;
+  result_id: string;
+  title: string;
+  content: string;
+  created_at: string;
 };
