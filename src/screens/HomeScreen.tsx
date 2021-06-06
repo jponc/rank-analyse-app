@@ -15,18 +15,25 @@ export const HomeScreen: React.FC<Props> = ({ navigation }) => {
   };
 
   return (
-    <Background>
-      <View style={styles.titleContainer}>
-        <Headline style={styles.title}>Rank Analyze</Headline>
-      </View>
-      <Button mode="contained" onPress={handleViewCrawls}>
-        View Crawls
-      </Button>
+    <Background justifyContent="center">
+      <View style={styles.container}>
+        <View style={styles.titleContainer}>
+          <Headline style={styles.title}>Web Scraping</Headline>
+        </View>
+        <Button mode="contained" onPress={handleViewCrawls}>
+          View Crawls
+        </Button>
+        </View>
     </Background>
   );
 };
 
 const styles = StyleSheet.create({
+  container: {
+    display: "flex",
+    alignItems: "center",
+    width: "50%",
+  },
   title: {
     fontSize: 30,
   },

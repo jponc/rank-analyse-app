@@ -1,6 +1,8 @@
 import React from "react";
 import { Crawl } from "../types";
 import { DataTable } from "react-native-paper";
+import { theme } from "../core/theme";
+import { StyleSheet } from "react-native";
 
 type Props = {
   crawls: Crawl[];
@@ -13,7 +15,7 @@ export const CrawlsTable: React.FC<Props> = ({ crawls, onPress }) => {
   };
 
   return (
-    <DataTable>
+    <DataTable style={styles.container}>
       <DataTable.Header>
         <DataTable.Title>ID</DataTable.Title>
         <DataTable.Title>Keyword</DataTable.Title>
@@ -36,3 +38,10 @@ export const CrawlsTable: React.FC<Props> = ({ crawls, onPress }) => {
     </DataTable>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    backgroundColor: theme.colors.surface,
+    height: "100%"
+  },
+});
