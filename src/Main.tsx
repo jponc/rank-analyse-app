@@ -5,11 +5,13 @@ import { App } from "./App";
 import { CrawlContainer } from "./contexts/CrawlContext";
 
 import { theme } from "./core/theme";
+import { ResultContainer } from "./contexts/ResultContext";
 
 const config = {
   screens: {
     Home: "",
     Crawls: "crawls",
+    Crawl: "crawls/:id",
   },
 };
 
@@ -23,7 +25,9 @@ export const Main = () => {
     <PaperProvider theme={theme}>
       <NavigationContainer linking={linking}>
         <CrawlContainer>
-          <App />
+          <ResultContainer>
+            <App />
+          </ResultContainer>
         </CrawlContainer>
       </NavigationContainer>
     </PaperProvider>

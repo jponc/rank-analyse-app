@@ -4,6 +4,9 @@ import { StackNavigationProp } from "@react-navigation/stack";
 export type RootStackParamList = {
   Home: undefined;
   Crawls: undefined;
+  Crawl: {
+    id: string;
+  };
 };
 
 // Home
@@ -18,6 +21,13 @@ export type CrawlsScreenRouteProp = RouteProp<RootStackParamList, "Crawls">;
 export type CrawlsScreenNavigationProp = StackNavigationProp<
   RootStackParamList,
   "Crawls"
+>;
+
+// Crawl
+export type CrawlScreenRouteProp = RouteProp<RootStackParamList, "Crawl">;
+export type CrawlScreenNavigationProp = StackNavigationProp<
+  RootStackParamList,
+  "Crawl"
 >;
 
 export type Crawl = {
@@ -44,4 +54,32 @@ export type GetCrawlsResponse = {
 
 export type GetCrawlResponse = {
   data: APICrawl;
-}
+};
+
+export type Result = {
+  id: string;
+  crawlId: string;
+  link: string;
+  title: string;
+  description: string;
+  position: number;
+  done: boolean;
+  isError: boolean;
+  createdAt: Date;
+};
+
+export type APIResult = {
+  id: string;
+  crawl_id: string;
+  link: string;
+  title: string;
+  description: string;
+  position: number;
+  done: boolean;
+  is_error: boolean;
+  created_at: string;
+};
+
+export type GetResultsResponse = {
+  data: APIResult[];
+};

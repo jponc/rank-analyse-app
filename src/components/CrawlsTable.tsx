@@ -10,8 +10,7 @@ type Props = {
 export const CrawlsTable: React.FC<Props> = ({ crawls, onPress }) => {
   const getDate = (d: Date): string => {
     return `${d.getFullYear()}-${d.getMonth()}-${d.getDate()}`;
-  }
-
+  };
 
   return (
     <DataTable>
@@ -25,7 +24,7 @@ export const CrawlsTable: React.FC<Props> = ({ crawls, onPress }) => {
       </DataTable.Header>
 
       {crawls.map((c) => (
-        <DataTable.Row key={c.id} onPress={() => onPress(c.id)}>
+        <DataTable.Row key={c.id} onPress={() => onPress(c.id)} pointerEvents="none">
           <DataTable.Cell>{c.id}</DataTable.Cell>
           <DataTable.Cell>{c.keyword}</DataTable.Cell>
           <DataTable.Cell>{c.searchEngine}</DataTable.Cell>

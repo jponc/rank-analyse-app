@@ -1,28 +1,44 @@
 import React, { useState } from "react";
 import { Crawl } from "../types";
-import { getCrawls } from "../api";
+import { fetchCrawl, fetchCrawls } from "../api";
 
 type CrawlContextType = {
   crawls: Crawl[];
-  fetchCrawls: () => Promise<void>;
+  loadCrawls: () => Promise<void>;
+  getCrawl: (crawlId: string) => Promise<Crawl | undefined>
 };
 
 export const CrawlContext = React.createContext<CrawlContextType>({
   crawls: [],
-  fetchCrawls: () => Promise.resolve(),
+  loadCrawls: () => Promise.resolve(),
+  getCrawl: () => Promise.resolve(undefined)
 });
 
 export const CrawlContainer: React.FC = ({ children }) => {
   const [crawls, setCrawls] = useState<Crawl[]>([]);
 
-  const fetchCrawls = async () => {
-    const newCrawls = await getCrawls();
+  const loadCrawls = async () => {
+    const newCrawls = await fetchCrawls();
     setCrawls(newCrawls);
   };
 
+  const getCrawl = async (crawlId: string): Promise<Crawl> => {
+    const crawl = crawls.find(c => c.id === crawlId)
+
+    if (crawl) {
+      return crawl
+    }
+
+    const fetchedCrawl = await fetchCrawl(crawlId)
+    setCrawls([...crawls, fetchedCrawl]);
+
+    return fetchedCrawl;
+  }
+
   const contextValue = {
     crawls,
-    fetchCrawls,
+    loadCrawls,
+    getCrawl
   };
 
   return (

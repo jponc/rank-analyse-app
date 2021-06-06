@@ -1,16 +1,26 @@
 import React, { memo } from "react";
-import { View, StyleSheet, KeyboardAvoidingView } from "react-native";
+import { StyleSheet, KeyboardAvoidingView, SafeAreaView } from "react-native";
 
 type Props = {
+  justifyContent?:
+    | "flex-start"
+    | "flex-end"
+    | "center"
+    | "space-between"
+    | "space-around"
+    | "space-evenly";
   children: React.ReactNode;
 };
 
-const Background = ({ children }: Props) => (
-  <View style={styles.background}>
-    <KeyboardAvoidingView style={styles.container} behavior="padding">
+const Background = ({ children, justifyContent }: Props) => (
+  <SafeAreaView style={styles.background}>
+    <KeyboardAvoidingView
+      style={[styles.container, { justifyContent: justifyContent }]}
+      behavior="padding"
+    >
       {children}
     </KeyboardAvoidingView>
-  </View>
+  </SafeAreaView>
 );
 
 const styles = StyleSheet.create({

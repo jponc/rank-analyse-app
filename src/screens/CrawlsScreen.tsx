@@ -13,14 +13,14 @@ type Props = {
 };
 
 export const CrawlsScreen: React.FC<Props> = ({ navigation }) => {
-  const { crawls, fetchCrawls } = useContext(CrawlContext);
+  const { crawls, loadCrawls } = useContext(CrawlContext);
 
   useEffect(() => {
-    fetchCrawls();
+    loadCrawls();
   }, []);
 
   const handleCrawlOnPress = (crawlId: string) => {
-    console.log(crawlId);
+    navigation.push("Crawl", { id: crawlId });
   };
 
   return (
@@ -45,6 +45,6 @@ const styles = StyleSheet.create({
     left: 0,
   },
   crawlsTableContainer: {
-    width: "70%"
-  }
+    width: "70%",
+  },
 });
