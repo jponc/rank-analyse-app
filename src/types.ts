@@ -68,6 +68,22 @@ export type ResultInfo = {
   createdAt: Date;
 };
 
+export type ResultTopic = {
+  id: string;
+  resultId: string;
+  label: string;
+  score: number;
+};
+
+export type ResultEntity = {
+  id: string;
+  resultId: string;
+  entity: string;
+  confidenceScore: number;
+  relevanceScore: number;
+  matchedText: string;
+};
+
 // Response Types
 export type GetCrawlsResponse = {
   data: APICrawl[];
@@ -87,6 +103,14 @@ export type GetResultInfoResponse = {
 
 export type GetResultLinksResponse = {
   data: APIResultLink[];
+};
+
+export type GetResultEntitiesResponse = {
+  data: APIResultEntity[];
+};
+
+export type GetResultTopicsResponse = {
+  data: APIResultTopic[];
 };
 
 // API Types
@@ -125,4 +149,20 @@ export type APIResultInfo = {
   title: string;
   content: string;
   created_at: string;
+};
+
+export type APIResultEntity = {
+  id: string;
+  result_id: string;
+  entity: string;
+  confidence_score: number;
+  relevance_score: number;
+  matched_text: string;
+};
+
+export type APIResultTopic = {
+  id: string;
+  result_id: string;
+  label: string;
+  score: number;
 };

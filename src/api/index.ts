@@ -4,15 +4,21 @@ import {
   Result,
   ResultLink,
   ResultInfo,
+  ResultEntity,
+  ResultTopic,
   GetCrawlsResponse,
   GetCrawlResponse,
   GetResultsResponse,
   GetResultInfoResponse,
   GetResultLinksResponse,
+  GetResultEntitiesResponse,
+  GetResultTopicsResponse,
   APICrawl,
   APIResult,
   APIResultLink,
   APIResultInfo,
+  APIResultEntity,
+  APIResultTopic,
 } from "../types";
 
 const baseUrl = Constants.manifest.extra!.apiBaseURL;
@@ -102,6 +108,40 @@ export const fetchResultInfo = async(resultId: string): Promise<ResultInfo> => {
   return normaliseResultInfo(jsonData.data)
 }
 
+export const fetchResultEntities = async(resultId: string): Promise<ResultEntity[]> => {
+  const res = await fetch(`${baseUrl}/results/${resultId}/entities`, {
+    headers: {
+      "Content-Type": "application/json",
+    },
+    method: "GET",
+  });
+
+  const jsonData: GetResultEntitiesResponse = await res.json();
+
+  if (!res.ok) {
+    throw new Error(`failed to fetch result entities for result: ${resultId}`);
+  }
+
+  return jsonData.data.map(normaliseResultEntity);
+}
+
+export const fetchResultTopics = async(resultId: string): Promise<ResultTopic[]> => {
+  const res = await fetch(`${baseUrl}/results/${resultId}/topics`, {
+    headers: {
+      "Content-Type": "application/json",
+    },
+    method: "GET",
+  });
+
+  const jsonData: GetResultTopicsResponse = await res.json();
+
+  if (!res.ok) {
+    throw new Error(`failed to fetch result topics for result: ${resultId}`);
+  }
+
+  return jsonData.data.map(normaliseResultTopic);
+}
+
 const normaliseCrawl = (c: APICrawl): Crawl => ({
   id: c.id,
   keyword: c.keyword,
@@ -137,4 +177,20 @@ const normaliseResultInfo = (r: APIResultInfo): ResultInfo => ({
   title: r.title,
   content: r.content,
   createdAt: new Date(r.created_at)
+});
+
+const normaliseResultEntity = (r: APIResultEntity): ResultEntity => ({
+  id: r.id,
+  resultId: r.result_id,
+  entity: r.entity,
+  confidenceScore: r.confidence_score,
+  relevanceScore: r.relevance_score,
+  matchedText: r.matched_text,
+});
+
+const normaliseResultTopic = (r: APIResultTopic): ResultTopic => ({
+  id: r.id,
+  resultId: r.result_id,
+  label: r.label,
+  score: r.score,
 });
