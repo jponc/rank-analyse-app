@@ -1,38 +1,54 @@
 import React, { useContext, useEffect, useState } from "react";
-import { Result, ResultLink, ResultInfo } from "../types";
-import { fetchResults, fetchResultInfo, fetchResultLinks } from "../api";
+import { Result, ResultLink, ResultInfo, ResultEntity, ResultTopic } from "../types";
+import { fetchResult, fetchResults, fetchResultInfo, fetchResultLinks, fetchResultTopics, fetchResultEntities } from "../api";
 import { CrawlContext } from "./CrawlContext";
 
 type ResultContextType = {
   results: Result[];
   resultLinks: ResultLink[];
+  resultEntities: ResultEntity[];
+  resultTopics: ResultTopic[];
   resultInfo: ResultInfo | undefined;
-  changeSelectedResultId: (id: string) => void;
+  setSelectedResultId: (id: string) => void;
+  selectedResult: Result | undefined;
   isResultsLoading: boolean;
   isResultLinksLoading: boolean;
   isResultInfoLoading: boolean;
+  isResultEntitiesLoading: boolean;
+  isResultTopicsLoading: boolean;
 };
 
 export const ResultContext = React.createContext<ResultContextType>({
   results: [],
   resultLinks: [],
+  resultEntities: [],
+  resultTopics: [],
   resultInfo: undefined,
-  changeSelectedResultId: () => {},
+  setSelectedResultId: () => {},
+  selectedResult: undefined,
   isResultsLoading: false,
   isResultLinksLoading: false,
   isResultInfoLoading: false,
+  isResultEntitiesLoading: false,
+  isResultTopicsLoading: false,
 });
 
 export const ResultContainer: React.FC = ({ children }) => {
   const [results, setResults] = useState<Result[]>([]);
+  const [selectedResult, setSelectedResult] = useState<Result | undefined>(undefined);
   const [resultLinks, setResultLinks] = useState<ResultLink[]>([]);
   const [resultInfo, setResultInfo] = useState<ResultInfo | undefined>(
     undefined
   );
-  const [selectedResultId, setSelectedResultId] = useState<string | undefined>(
-    undefined
+
+  const [resultEntities, setResultEntities] = useState<ResultEntity[]>([]);
+  const [resultTopics, setResultTopics] = useState<ResultTopic[]>([]);
+  const [selectedResultId, setSelectedResultId] = useState<string>(
+    ""
   );
   const [isResultsLoading, setIsResultsLoading] = useState<boolean>(true);
+  const [isResultTopicsLoading, setIsResultTopicsLoading] = useState<boolean>(true);
+  const [isResultEntitiesLoading, setIsResultEntitiesLoading] = useState<boolean>(true);
   const [isResultLinksLoading, setIsResultLinksLoading] = useState<boolean>(
     false
   );
@@ -41,10 +57,6 @@ export const ResultContainer: React.FC = ({ children }) => {
   );
 
   const { selectedCrawl } = useContext(CrawlContext)
-
-  const changeSelectedResultId = (id: string) => {
-    setSelectedResultId(id);
-  };
 
   // Fetch results when crawl changes
   useEffect(() => {
@@ -58,15 +70,30 @@ export const ResultContainer: React.FC = ({ children }) => {
     })();
   }, [selectedCrawl]);
 
-  // set selectedResultId to undefined when crawlId changes
+  // update selected result when selectedResultId changes
   useEffect(() => {
-    setSelectedResultId(undefined);
-  }, [selectedCrawl]);
+    (async () => {
+      if (selectedResultId === "") {
+        setSelectedResult(undefined);
+        return;
+      }
+
+      const result = results.find(r => r.id === selectedResultId)
+
+      if (result) {
+        setSelectedResult(result)
+        return;
+      }
+
+      const fetchedResult = await fetchResult(selectedResultId)
+      setSelectedResult(fetchedResult);
+    })();
+  }, [selectedResultId])
 
   // Update result links
   useEffect(() => {
     (async () => {
-      if (!selectedResultId) {
+      if (selectedResultId === "") {
         setResultLinks([]);
         return;
       }
@@ -77,10 +104,38 @@ export const ResultContainer: React.FC = ({ children }) => {
     })();
   }, [selectedResultId]);
 
+  // Update result topics
+  useEffect(() => {
+    (async () => {
+      if (selectedResultId === "") {
+        setResultTopics([]);
+        return;
+      }
+
+      setIsResultTopicsLoading(true);
+      setResultTopics(await fetchResultTopics(selectedResultId));
+      setIsResultTopicsLoading(false);
+    })();
+  }, [selectedResultId]);
+
+  // Update result entities
+  useEffect(() => {
+    (async () => {
+      if (selectedResultId === "") {
+        setResultEntities([]);
+        return;
+      }
+
+      setIsResultEntitiesLoading(true);
+      setResultEntities(await fetchResultEntities(selectedResultId));
+      setIsResultEntitiesLoading(false);
+    })();
+  }, [selectedResultId]);
+
   //Update result info
   useEffect(() => {
     (async () => {
-      if (!selectedResultId) {
+      if (selectedResultId === "") {
         setResultInfo(undefined);
         return;
       }
@@ -95,10 +150,15 @@ export const ResultContainer: React.FC = ({ children }) => {
     results,
     resultLinks,
     resultInfo,
-    changeSelectedResultId,
+    resultTopics,
+    resultEntities,
+    setSelectedResultId,
+    selectedResult,
     isResultsLoading,
     isResultLinksLoading,
     isResultInfoLoading,
+    isResultTopicsLoading,
+    isResultEntitiesLoading,
   };
 
   return (

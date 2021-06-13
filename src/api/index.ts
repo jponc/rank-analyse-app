@@ -9,6 +9,7 @@ import {
   GetCrawlsResponse,
   GetCrawlResponse,
   GetResultsResponse,
+  GetResultResponse,
   GetResultInfoResponse,
   GetResultLinksResponse,
   GetResultEntitiesResponse,
@@ -55,6 +56,23 @@ export const fetchCrawl = async (crawlId: string): Promise<Crawl> => {
   }
 
   return normaliseCrawl(jsonData.data);
+};
+
+export const fetchResult = async (resultId: string): Promise<Result> => {
+  const res = await fetch(`${baseUrl}/results/${resultId}`, {
+    headers: {
+      "Content-Type": "application/json",
+    },
+    method: "GET",
+  });
+
+  const jsonData: GetResultResponse = await res.json();
+
+  if (!res.ok) {
+    throw new Error(`failed to fetch result ${resultId}`);
+  }
+
+  return normaliseResult(jsonData.data);
 };
 
 export const fetchResults = async (crawlId: string): Promise<Result[]> => {
@@ -122,7 +140,7 @@ export const fetchResultEntities = async(resultId: string): Promise<ResultEntity
     throw new Error(`failed to fetch result entities for result: ${resultId}`);
   }
 
-  return jsonData.data.map(normaliseResultEntity);
+  return jsonData.data.map(normaliseResultEntity).sort((a, b) => a.confidenceScore > b.confidenceScore ? -1 : 1);
 }
 
 export const fetchResultTopics = async(resultId: string): Promise<ResultTopic[]> => {
@@ -139,7 +157,7 @@ export const fetchResultTopics = async(resultId: string): Promise<ResultTopic[]>
     throw new Error(`failed to fetch result topics for result: ${resultId}`);
   }
 
-  return jsonData.data.map(normaliseResultTopic);
+  return jsonData.data.map(normaliseResultTopic).sort((a, b) => a.score > b.score ? -1 : 1);
 }
 
 const normaliseCrawl = (c: APICrawl): Crawl => ({

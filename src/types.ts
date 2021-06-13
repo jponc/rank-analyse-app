@@ -103,6 +103,10 @@ export type GetCrawlResponse = {
   data: APICrawl;
 };
 
+export type GetResultResponse = {
+  data: APIResult;
+};
+
 export type GetResultsResponse = {
   data: APIResult[];
 };

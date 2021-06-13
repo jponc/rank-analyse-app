@@ -29,6 +29,7 @@ export const CrawlContainer: React.FC = ({ children }) => {
   useEffect(() => {
     (async () => {
       if (selectedCrawlId === "") {
+        setSelectedCrawl(undefined);
         return;
       }
 

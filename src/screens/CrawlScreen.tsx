@@ -1,14 +1,11 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect } from "react";
 import { StyleSheet, View } from "react-native";
 import { ActivityIndicator, Appbar, Title } from "react-native-paper";
 import Background from "../components/Background";
 import { StatusBarView } from "../components/StatusBarView";
 import { CrawlContext } from "../contexts/CrawlContext";
 import { ResultContext } from "../contexts/ResultContext";
-import {
-  CrawlScreenNavigationProp,
-  CrawlScreenRouteProp,
-} from "../types";
+import { CrawlScreenNavigationProp, CrawlScreenRouteProp } from "../types";
 import { CrawlChips } from "../components/CrawlChips";
 import { ResultsTable } from "../components/ResultsTable";
 
@@ -19,22 +16,18 @@ type Props = {
 
 export const CrawlScreen: React.FC<Props> = ({ navigation, route }) => {
   const { setSelectedCrawlId, selectedCrawl } = useContext(CrawlContext);
-  const {
-    results,
-    isResultsLoading,
-  } = useContext(ResultContext);
+  const { results, isResultsLoading } = useContext(ResultContext);
   const { id } = route.params;
 
   useEffect(() => {
     setSelectedCrawlId(id);
   }, [id]);
 
-
   const handleOnResultPress = (resultId: string) => {
     navigation.push("Result", { id: resultId });
   };
 
-  const title = selectedCrawl ? selectedCrawl.keyword : "Loading..."
+  const title = selectedCrawl ? selectedCrawl.keyword : "Loading...";
 
   return (
     <StatusBarView>
