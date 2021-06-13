@@ -1,14 +1,13 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Result, ResultLink, ResultInfo } from "../types";
 import { fetchResults, fetchResultInfo, fetchResultLinks } from "../api";
+import { CrawlContext } from "./CrawlContext";
 
 type ResultContextType = {
   results: Result[];
   resultLinks: ResultLink[];
   resultInfo: ResultInfo | undefined;
-  changeCrawlId: (id: string) => void;
   changeSelectedResultId: (id: string) => void;
-  selectedResultUrl: string;
   isResultsLoading: boolean;
   isResultLinksLoading: boolean;
   isResultInfoLoading: boolean;
@@ -18,9 +17,7 @@ export const ResultContext = React.createContext<ResultContextType>({
   results: [],
   resultLinks: [],
   resultInfo: undefined,
-  changeCrawlId: () => {},
   changeSelectedResultId: () => {},
-  selectedResultUrl: "",
   isResultsLoading: false,
   isResultLinksLoading: false,
   isResultInfoLoading: false,
@@ -32,7 +29,6 @@ export const ResultContainer: React.FC = ({ children }) => {
   const [resultInfo, setResultInfo] = useState<ResultInfo | undefined>(
     undefined
   );
-  const [crawlId, setCrawlId] = useState<string | undefined>(undefined);
   const [selectedResultId, setSelectedResultId] = useState<string | undefined>(
     undefined
   );
@@ -43,33 +39,29 @@ export const ResultContainer: React.FC = ({ children }) => {
   const [isResultInfoLoading, setIsResultInfoLoading] = useState<boolean>(
     false
   );
-  // NOTE: Workaround because ResultInfo doesn't provide the url
-  const [selectedResultUrl, setSelectedResultUrl] = useState<string>("");
 
-  const changeCrawlId = (id: string) => {
-    setCrawlId(id);
-  };
+  const { selectedCrawl } = useContext(CrawlContext)
 
   const changeSelectedResultId = (id: string) => {
     setSelectedResultId(id);
   };
 
-  // Fetch results when crawlId changes
+  // Fetch results when crawl changes
   useEffect(() => {
     (async () => {
-      if (!crawlId) {
+      if (!selectedCrawl) {
         return;
       }
       setIsResultsLoading(true);
-      setResults(await fetchResults(crawlId));
+      setResults(await fetchResults(selectedCrawl.id));
       setIsResultsLoading(false);
     })();
-  }, [crawlId]);
+  }, [selectedCrawl]);
 
   // set selectedResultId to undefined when crawlId changes
   useEffect(() => {
     setSelectedResultId(undefined);
-  }, [crawlId]);
+  }, [selectedCrawl]);
 
   // Update result links
   useEffect(() => {
@@ -99,30 +91,14 @@ export const ResultContainer: React.FC = ({ children }) => {
     })();
   }, [selectedResultId]);
 
-  // Update selected result link (workaround)
-  useEffect(() => {
-    if (!selectedResultId) {
-      return;
-    }
-
-    const result = results.find((r) => r.id === selectedResultId);
-    if (!result) {
-      return;
-    }
-
-    setSelectedResultUrl(result.link);
-  }, [selectedResultId]);
-
   const contextValue = {
     results,
     resultLinks,
     resultInfo,
-    changeCrawlId,
     changeSelectedResultId,
     isResultsLoading,
     isResultLinksLoading,
     isResultInfoLoading,
-    selectedResultUrl,
   };
 
   return (

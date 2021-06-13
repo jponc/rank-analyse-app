@@ -7,6 +7,9 @@ export type RootStackParamList = {
   Crawl: {
     id: string;
   };
+  Result: {
+    id: string;
+  };
 };
 
 // Home
@@ -28,6 +31,13 @@ export type CrawlScreenRouteProp = RouteProp<RootStackParamList, "Crawl">;
 export type CrawlScreenNavigationProp = StackNavigationProp<
   RootStackParamList,
   "Crawl"
+>;
+
+// Result
+export type ResultScreenRouteProp = RouteProp<RootStackParamList, "Result">;
+export type ResultScreenNavigationProp = StackNavigationProp<
+  RootStackParamList,
+  "Result"
 >;
 
 // Internal Types

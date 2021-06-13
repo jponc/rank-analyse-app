@@ -12,6 +12,7 @@ const config = {
     Home: "",
     Crawls: "crawls",
     Crawl: "crawls/:id",
+    Result: "results/:id",
   },
 };
 

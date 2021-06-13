@@ -8,12 +8,9 @@ import { ResultContext } from "../contexts/ResultContext";
 import {
   CrawlScreenNavigationProp,
   CrawlScreenRouteProp,
-  Crawl,
 } from "../types";
 import { CrawlChips } from "../components/CrawlChips";
 import { ResultsTable } from "../components/ResultsTable";
-import { ResultInfoSection } from "../components/ResultInfoSection";
-import { ResultLinksSection } from "../components/ResultLinksSection";
 
 type Props = {
   route: CrawlScreenRouteProp;
@@ -21,86 +18,51 @@ type Props = {
 };
 
 export const CrawlScreen: React.FC<Props> = ({ navigation, route }) => {
-  const { getCrawl } = useContext(CrawlContext);
+  const { setSelectedCrawlId, selectedCrawl } = useContext(CrawlContext);
   const {
-    changeCrawlId,
-    changeSelectedResultId,
     results,
-    resultInfo,
-    resultLinks,
     isResultsLoading,
-    isResultInfoLoading,
-    isResultLinksLoading,
-    selectedResultUrl,
   } = useContext(ResultContext);
   const { id } = route.params;
-  const [crawl, setCrawl] = useState<Crawl | undefined>(undefined);
 
   useEffect(() => {
-    (async () => {
-      setCrawl(await getCrawl(id));
-      changeCrawlId(id);
-    })();
+    setSelectedCrawlId(id);
   }, [id]);
 
+
   const handleOnResultPress = (resultId: string) => {
-    changeSelectedResultId(resultId);
+    navigation.push("Result", { id: resultId });
   };
+
+  const title = selectedCrawl ? selectedCrawl.keyword : "Loading..."
 
   return (
     <StatusBarView>
       <Appbar style={styles.appbar}>
         <Appbar.BackAction onPress={() => navigation.push("Crawls")} />
-        <Appbar.Content title={`Crawl`} />
+        <Appbar.Content title={title} />
       </Appbar>
       <Background justifyContent="flex-start">
         <View style={styles.container}>
-          <View style={styles.left}>
-            <View style={styles.titleContainer}>
-              <Title>Crawl Information</Title>
-            </View>
-            <View style={styles.crawlChipsContainer}>
-              {crawl ? (
-                <CrawlChips crawl={crawl} />
-              ) : (
-                <ActivityIndicator animating={true} />
-              )}
-            </View>
-            <View style={styles.titleContainer}>
-              <Title>Results</Title>
-            </View>
-            <View style={styles.resultsTableContainer}>
-              {isResultsLoading ? (
-                <ActivityIndicator animating={true} />
-              ) : (
-                <ResultsTable results={results} onPress={handleOnResultPress} />
-              )}
-            </View>
+          <View style={styles.titleContainer}>
+            <Title>Crawl Information</Title>
           </View>
-          <View style={styles.right}>
-            <View style={styles.titleContainer}>
-              <Title>Selected Result</Title>
-            </View>
-            <View style={styles.resultInfoContainer}>
-              {isResultInfoLoading ? (
-                <ActivityIndicator animating={true} />
-              ) : (
-                <ResultInfoSection
-                  resultInfo={resultInfo}
-                  url={selectedResultUrl}
-                />
-              )}
-            </View>
-            <View style={styles.titleContainer}>
-              <Title>Links</Title>
-            </View>
-            <View style={styles.resultLinksContainer}>
-              {isResultLinksLoading ? (
-                <ActivityIndicator animating={true} />
-              ) : (
-                <ResultLinksSection resultLinks={resultLinks} />
-              )}
-            </View>
+          <View style={styles.crawlChipsContainer}>
+            {selectedCrawl ? (
+              <CrawlChips crawl={selectedCrawl} />
+            ) : (
+              <ActivityIndicator animating={true} />
+            )}
+          </View>
+          <View style={styles.titleContainer}>
+            <Title>Results</Title>
+          </View>
+          <View style={styles.resultsTableContainer}>
+            {isResultsLoading ? (
+              <ActivityIndicator animating={true} />
+            ) : (
+              <ResultsTable results={results} onPress={handleOnResultPress} />
+            )}
           </View>
         </View>
       </Background>
@@ -111,9 +73,8 @@ export const CrawlScreen: React.FC<Props> = ({ navigation, route }) => {
 const styles = StyleSheet.create({
   container: {
     display: "flex",
-    flexDirection: "row",
+    flexDirection: "column",
     width: "100%",
-    justifyContent: "space-between",
   },
   resultsTableContainer: {
     maxHeight: 500,
@@ -123,23 +84,10 @@ const styles = StyleSheet.create({
     right: 0,
     left: 0,
   },
-  left: {
-    width: "49%",
-  },
-  right: {
-    width: "49%",
-  },
   crawlChipsContainer: {
     marginBottom: 20,
   },
   titleContainer: {
     marginBottom: 20,
-  },
-  resultInfoContainer: {
-    marginBottom: 20,
-  },
-  resultLinksContainer: {
-    marginBottom: 20,
-    maxHeight: 350,
   },
 });

@@ -1,44 +1,55 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Crawl } from "../types";
 import { fetchCrawl, fetchCrawls } from "../api";
 
 type CrawlContextType = {
   crawls: Crawl[];
   loadCrawls: () => Promise<void>;
-  getCrawl: (crawlId: string) => Promise<Crawl | undefined>
+  setSelectedCrawlId: (crawlId: string) => void
+  selectedCrawl: Crawl | undefined;
 };
 
 export const CrawlContext = React.createContext<CrawlContextType>({
   crawls: [],
   loadCrawls: () => Promise.resolve(),
-  getCrawl: () => Promise.resolve(undefined)
+  setSelectedCrawlId: () => Promise.resolve(),
+  selectedCrawl: undefined,
 });
 
 export const CrawlContainer: React.FC = ({ children }) => {
   const [crawls, setCrawls] = useState<Crawl[]>([]);
+  const [selectedCrawl, setSelectedCrawl] = useState<Crawl | undefined>(undefined);
+  const [selectedCrawlId, setSelectedCrawlId] = useState<string>("");
 
   const loadCrawls = async () => {
     const newCrawls = await fetchCrawls();
     setCrawls(newCrawls);
   };
 
-  const getCrawl = async (crawlId: string): Promise<Crawl> => {
-    const crawl = crawls.find(c => c.id === crawlId)
+  useEffect(() => {
+    (async () => {
+      if (selectedCrawlId === "") {
+        return;
+      }
 
-    if (crawl) {
-      return crawl
-    }
+      const crawl = crawls.find(c => c.id === selectedCrawlId)
 
-    const fetchedCrawl = await fetchCrawl(crawlId)
-    setCrawls([...crawls, fetchedCrawl]);
+      if (crawl) {
+        setSelectedCrawl(crawl)
+        return;
+      }
 
-    return fetchedCrawl;
-  }
+      const fetchedCrawl = await fetchCrawl(selectedCrawlId)
+      setSelectedCrawl(fetchedCrawl);
+    })();
+  }, [selectedCrawlId])
+
 
   const contextValue = {
     crawls,
     loadCrawls,
-    getCrawl
+    setSelectedCrawlId,
+    selectedCrawl,
   };
 
   return (
