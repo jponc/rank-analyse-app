@@ -68,7 +68,7 @@ const ResultsTableMobile: React.FC<Props> = ({ results, onPress }) => {
       {results.map((r) => (
         <Card style={styles.cardContainer} key={r.id}>
           <Card.Content>
-            <Title>#{r.position}. {r.title}</Title>
+            <Title>{r.position}. {r.title}</Title>
             <Paragraph>Link: {r.link}</Paragraph>
             <Paragraph>Status: {getStatusText(r.isError, r.done)}</Paragraph>
           </Card.Content>
