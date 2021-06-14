@@ -4,6 +4,7 @@ import { HomeScreenNavigationProp } from "../types";
 import Background from "../components/Background";
 import Button from "../components/Button";
 import { View, StyleSheet } from "react-native";
+import { StatusBarView } from "../components/StatusBarView";
 
 type Props = {
   navigation: HomeScreenNavigationProp;
@@ -15,29 +16,26 @@ export const HomeScreen: React.FC<Props> = ({ navigation }) => {
   };
 
   return (
-    <Background justifyContent="center">
-      <View style={styles.container}>
+    <StatusBarView>
+      <Background>
         <View style={styles.titleContainer}>
           <Headline style={styles.title}>Web Scraping</Headline>
         </View>
         <Button mode="contained" onPress={handleViewCrawls}>
           View Crawls
         </Button>
-        </View>
-    </Background>
-  );
+      </Background>
+      </StatusBarView>
+    );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    display: "flex",
-    alignItems: "center",
-    width: "50%",
-  },
   title: {
     fontSize: 30,
   },
   titleContainer: {
-    marginBottom: 80,
+    marginBottom: 50,
+    display: "flex",
+    justifyContent: "center",
   },
 });

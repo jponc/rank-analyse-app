@@ -1,5 +1,5 @@
 import React, { useContext, useEffect } from "react";
-import { ScrollView, StyleSheet } from "react-native";
+import { StyleSheet } from "react-native";
 import { Appbar } from "react-native-paper";
 import Background from "../components/Background";
 import { StatusBarView } from "../components/StatusBarView";
@@ -30,9 +30,7 @@ export const CrawlsScreen: React.FC<Props> = ({ navigation }) => {
         <Appbar.Content title="Crawls" />
       </Appbar>
       <Background>
-        <ScrollView style={styles.crawlsTableContainer}>
-          <CrawlsTable crawls={crawls} onPress={handleCrawlOnPress} />
-        </ScrollView>
+        <CrawlsTable crawls={crawls} onPress={handleCrawlOnPress} />
       </Background>
     </StatusBarView>
   );
@@ -43,8 +41,5 @@ const styles = StyleSheet.create({
     top: 0,
     right: 0,
     left: 0,
-  },
-  crawlsTableContainer: {
-    width: "90%",
   },
 });

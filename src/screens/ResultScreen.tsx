@@ -36,6 +36,8 @@ export const ResultScreen: React.FC<Props> = ({ navigation, route }) => {
     setSelectedResultId(id);
   }, [id]);
 
+
+
   if (selectedResult === undefined) {
     return (
       <StatusBarView>
@@ -44,13 +46,16 @@ export const ResultScreen: React.FC<Props> = ({ navigation, route }) => {
     );
   }
 
+  const handleOnBackPress = () => {
+    setSelectedResultId("")
+    navigation.push("Crawl", { id: selectedResult.crawlId })
+  }
+
   return (
     <StatusBarView>
       <Appbar style={styles.appbar}>
         <Appbar.BackAction
-          onPress={() =>
-            navigation.push("Crawl", { id: selectedResult.crawlId })
-          }
+          onPress={handleOnBackPress}
         />
         <Appbar.Content title={selectedResult.title} />
       </Appbar>

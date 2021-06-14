@@ -1,5 +1,5 @@
 import React, { memo } from "react";
-import { StyleSheet, KeyboardAvoidingView, SafeAreaView } from "react-native";
+import { StyleSheet, KeyboardAvoidingView, SafeAreaView, ScrollView } from "react-native";
 
 type Props = {
   justifyContent?:
@@ -18,7 +18,7 @@ const Background = ({ children, justifyContent }: Props) => (
       style={[styles.container, { justifyContent: justifyContent }]}
       behavior="padding"
     >
-      {children}
+      <ScrollView style={styles.contentContainer}>{children}</ScrollView>
     </KeyboardAvoidingView>
   </SafeAreaView>
 );
@@ -30,12 +30,15 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    padding: 20,
     width: "100%",
     alignSelf: "center",
     alignItems: "center",
     justifyContent: "center",
   },
+  contentContainer: {
+    width: "100%",
+    padding: 15,
+  }
 });
 
 export default memo(Background);
