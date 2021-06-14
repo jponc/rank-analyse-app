@@ -75,6 +75,7 @@ export type ResultInfo = {
   resultId: string;
   title: string;
   content: string;
+  cleanedText: string;
   createdAt: Date;
 };
 
@@ -162,6 +163,7 @@ export type APIResultInfo = {
   result_id: string;
   title: string;
   content: string;
+  cleaned_text: string;
   created_at: string;
 };
 

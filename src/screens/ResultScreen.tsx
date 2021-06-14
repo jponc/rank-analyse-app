@@ -16,6 +16,7 @@ import { EntitiesTable } from "../components/EntitiesTable";
 import { theme } from "../core/theme";
 import { ResultLinksSection } from "../components/ResultLinksSection";
 import { isLargeScreen } from "../core/screen";
+import { PageContent } from "../components/PageContent";
 
 type Props = {
   route: ResultScreenRouteProp;
@@ -27,16 +28,17 @@ export const ResultScreen: React.FC<Props> = ({ navigation, route }) => {
     setSelectedResultId,
     selectedResult,
     resultTopics,
+    resultInfo,
     resultLinks,
     resultEntities,
   } = useContext(ResultContext);
   const [selectedView, setSelectedView] = useState<string>("analysis");
   const { id } = route.params;
 
-  let styles = {...mobileStyles}
+  let styles: any = { ...mobileStyles };
 
   if (isLargeScreen()) {
-    styles = {...styles, ...largeStyles}
+    styles = { ...styles, ...largeStyles };
   }
 
   useEffect(() => {
@@ -52,16 +54,14 @@ export const ResultScreen: React.FC<Props> = ({ navigation, route }) => {
   }
 
   const handleOnBackPress = () => {
-    setSelectedResultId("")
-    navigation.push("Crawl", { id: selectedResult.crawlId })
-  }
+    setSelectedResultId("");
+    navigation.push("Crawl", { id: selectedResult.crawlId });
+  };
 
   return (
     <StatusBarView>
       <Appbar style={styles.appbar}>
-        <Appbar.BackAction
-          onPress={handleOnBackPress}
-        />
+        <Appbar.BackAction onPress={handleOnBackPress} />
         <Appbar.Content title={selectedResult.title} />
       </Appbar>
       <Background justifyContent="flex-start">
@@ -73,24 +73,27 @@ export const ResultScreen: React.FC<Props> = ({ navigation, route }) => {
             <ResultSection result={selectedResult} />
           </View>
           <View style={styles.titleContainer}>
-            {selectedView === "analysis" ? (
-              <Subheading
-                style={styles.option}
-                onPress={() => setSelectedView("links")}
-              >
-                View Links
-              </Subheading>
-            ) : (
-              <Subheading
-                style={styles.option}
-                onPress={() => setSelectedView("analysis")}
-              >
-                View Analysis
-              </Subheading>
-            )}
+            <Subheading
+              style={[styles.option, selectedView === "analysis" ? styles.selectedOption : {}]}
+              onPress={() => setSelectedView("analysis")}
+            >
+              Analysis
+            </Subheading>
+            <Subheading
+              style={[styles.option, selectedView === "links" ? styles.selectedOption : {}]}
+              onPress={() => setSelectedView("links")}
+            >
+              Links
+            </Subheading>
+            <Subheading
+              style={[styles.option, selectedView === "page_content" ? styles.selectedOption : {}]}
+              onPress={() => setSelectedView("page_content")}
+            >
+              Page Content
+            </Subheading>
           </View>
           <View style={styles.viewContainer}>
-            {selectedView === "analysis" ? (
+            {selectedView === "analysis" && (
               <>
                 <View style={styles.topicsContainer}>
                   <TopicsTable topics={resultTopics} />
@@ -99,10 +102,20 @@ export const ResultScreen: React.FC<Props> = ({ navigation, route }) => {
                   <EntitiesTable entities={resultEntities} />
                 </View>
               </>
-            ) : (
+            )}
+
+            {selectedView === "links" && (
               <>
                 <View style={styles.topicsContainer}>
                   <ResultLinksSection resultLinks={resultLinks} />
+                </View>
+              </>
+            )}
+
+            {selectedView === "page_content" && resultInfo !== undefined && (
+              <>
+                <View style={styles.pageContentContainer}>
+                  <PageContent content={resultInfo.cleanedText} />
                 </View>
               </>
             )}
@@ -128,13 +141,14 @@ const mobileStyles = StyleSheet.create({
     marginBottom: 20,
     display: "flex",
     flexDirection: "row",
-    justifyContent: "space-between",
   },
   resultContainer: {
     marginBottom: 20,
   },
   option: {
     paddingHorizontal: 10,
+  },
+  selectedOption: {
     color: theme.colors.primary,
   },
   viewContainer: {
@@ -147,6 +161,10 @@ const mobileStyles = StyleSheet.create({
   },
   entitiesContainer: {
     maxHeight: 300,
+  },
+  pageContentContainer: {
+    maxHeight: 300,
+    width: "100%",
   },
 });
 
@@ -163,6 +181,10 @@ const largeStyles = StyleSheet.create({
   },
   entitiesContainer: {
     width: "49%",
+    maxHeight: 500,
+  },
+  pageContentContainer: {
+    width: "100%",
     maxHeight: 500,
   },
 });

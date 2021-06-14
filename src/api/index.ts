@@ -194,7 +194,8 @@ const normaliseResultInfo = (r: APIResultInfo): ResultInfo => ({
   resultId: r.result_id,
   title: r.title,
   content: r.content,
-  createdAt: new Date(r.created_at)
+  cleanedText: r.cleaned_text,
+  createdAt: new Date(r.created_at),
 });
 
 const normaliseResultEntity = (r: APIResultEntity): ResultEntity => ({
