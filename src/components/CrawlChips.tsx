@@ -23,9 +23,11 @@ const styles = StyleSheet.create({
   container: {
     display: "flex",
     flexDirection: "row",
+    flexWrap: "wrap",
   },
   chip: {
     backgroundColor: theme.colors.surface,
     marginRight: 10,
+    marginBottom: 10,
   },
 });

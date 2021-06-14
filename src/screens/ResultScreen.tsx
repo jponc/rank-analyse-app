@@ -15,6 +15,7 @@ import { TopicsTable } from "../components/TopicsTable";
 import { EntitiesTable } from "../components/EntitiesTable";
 import { theme } from "../core/theme";
 import { ResultLinksSection } from "../components/ResultLinksSection";
+import { isLargeScreen } from "../core/screen";
 
 type Props = {
   route: ResultScreenRouteProp;
@@ -32,11 +33,15 @@ export const ResultScreen: React.FC<Props> = ({ navigation, route }) => {
   const [selectedView, setSelectedView] = useState<string>("analysis");
   const { id } = route.params;
 
+  let styles = {...mobileStyles}
+
+  if (isLargeScreen()) {
+    styles = {...styles, ...largeStyles}
+  }
+
   useEffect(() => {
     setSelectedResultId(id);
   }, [id]);
-
-
 
   if (selectedResult === undefined) {
     return (
@@ -108,7 +113,7 @@ export const ResultScreen: React.FC<Props> = ({ navigation, route }) => {
   );
 };
 
-const styles = StyleSheet.create({
+const mobileStyles = StyleSheet.create({
   container: {
     display: "flex",
     flexDirection: "column",
@@ -134,12 +139,27 @@ const styles = StyleSheet.create({
   },
   viewContainer: {
     display: "flex",
+    flexDirection: "column",
+  },
+  topicsContainer: {
+    maxHeight: 300,
+    marginBottom: 20,
+  },
+  entitiesContainer: {
+    maxHeight: 300,
+  },
+});
+
+const largeStyles = StyleSheet.create({
+  viewContainer: {
+    display: "flex",
     flexDirection: "row",
     justifyContent: "space-between",
   },
   topicsContainer: {
     width: "49%",
     maxHeight: 500,
+    marginBottom: 0,
   },
   entitiesContainer: {
     width: "49%",
