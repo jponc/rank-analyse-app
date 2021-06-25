@@ -102,7 +102,7 @@ const largeStyles = StyleSheet.create({
   inputsContainer: {
     backgroundColor: theme.colors.surface,
     padding: 10,
-    width: "50%",
+    width: "49%",
     marginBottom: 30,
   },
 });
