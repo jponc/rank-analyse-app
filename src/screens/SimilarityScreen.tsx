@@ -12,6 +12,7 @@ import {
 
 import { isLargeScreen } from "../core/screen";
 import { SimilarityContext } from "../contexts/SimilarityContext";
+import { SimilarityResultsTable } from "../components/SimilarityResultsTable";
 
 type Props = {
   route: SimilarityScreenRouteProp;
@@ -58,6 +59,17 @@ export const SimilarityScreen: React.FC<Props> = ({ navigation }) => {
             Compare
           </Button>
         </View>
+
+        {similarityAnalysis && (
+          <View style={styles.tablesContainer}>
+            <View style={styles.tableContainer}>
+              <SimilarityResultsTable similarityKeyword={similarityAnalysis.keyword1Similarity} />
+            </View>
+            <View style={styles.tableContainer}>
+              <SimilarityResultsTable similarityKeyword={similarityAnalysis.keyword2Similarity} />
+            </View>
+          </View>
+        )}
       </Background>
     </StatusBarView>
   );
@@ -80,9 +92,17 @@ const mobileStyles = StyleSheet.create({
 });
 
 const largeStyles = StyleSheet.create({
+  tablesContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+  tableContainer: {
+    width: "49%",
+  },
   inputsContainer: {
     backgroundColor: theme.colors.surface,
     padding: 10,
     width: "50%",
+    marginBottom: 30,
   },
 });
