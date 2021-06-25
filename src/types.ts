@@ -42,7 +42,10 @@ export type ResultScreenNavigationProp = StackNavigationProp<
 >;
 
 // Similarity
-export type SimilarityScreenRouteProp = RouteProp<RootStackParamList, "Similarity">;
+export type SimilarityScreenRouteProp = RouteProp<
+  RootStackParamList,
+  "Similarity"
+>;
 export type SimilarityScreenNavigationProp = StackNavigationProp<
   RootStackParamList,
   "Similarity"
@@ -103,6 +106,24 @@ export type ResultEntity = {
   matchedText: string;
 };
 
+export type SimilarityAnalysis = {
+  keyword1Similarity: SimilarityKeyword;
+  keyword2Similarity: SimilarityKeyword;
+  locations: string[];
+  country: string;
+};
+
+export type SimilarityKeyword = {
+  keyword: string;
+  results: SimilarityResult[];
+};
+
+export type SimilarityResult = {
+  averagePosition: number;
+  seenCount: number;
+  title: string;
+}
+
 // Response Types
 export type GetCrawlsResponse = {
   data: APICrawl[];
@@ -134,6 +155,13 @@ export type GetResultEntitiesResponse = {
 
 export type GetResultTopicsResponse = {
   data: APIResultTopic[];
+};
+
+export type SimilarityAnalysisResponse = {
+  keyword1_similarity: APISimilarityKeyword;
+  keyword2_similarity: APISimilarityKeyword;
+  locations: string[];
+  country: string;
 };
 
 // API Types
@@ -189,4 +217,15 @@ export type APIResultTopic = {
   result_id: string;
   label: string;
   score: number;
+};
+
+export type APISimilarityKeyword = {
+  keyword: string;
+  similarity_results: APISimilarityResult[];
+};
+
+export type APISimilarityResult = {
+  average_position: number;
+  seen_count: number;
+  title: string;
 };

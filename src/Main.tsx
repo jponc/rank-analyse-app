@@ -6,6 +6,7 @@ import { CrawlContainer } from "./contexts/CrawlContext";
 
 import { theme } from "./core/theme";
 import { ResultContainer } from "./contexts/ResultContext";
+import { SimilarityContainer } from "./contexts/SimilarityContext";
 
 const config = {
   screens: {
@@ -28,7 +29,9 @@ export const Main = () => {
       <NavigationContainer linking={linking}>
         <CrawlContainer>
           <ResultContainer>
-            <App />
+            <SimilarityContainer>
+              <App />
+            </SimilarityContainer>
           </ResultContainer>
         </CrawlContainer>
       </NavigationContainer>

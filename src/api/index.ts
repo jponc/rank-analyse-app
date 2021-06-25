@@ -20,6 +20,11 @@ import {
   APIResultInfo,
   APIResultEntity,
   APIResultTopic,
+  SimilarityAnalysis,
+  SimilarityAnalysisResponse,
+  APISimilarityResult,
+  SimilarityResult,
+  SimilarityKeyword,
 } from "../types";
 
 const baseUrl = Constants.manifest.extra!.apiBaseURL;
@@ -92,7 +97,9 @@ export const fetchResults = async (crawlId: string): Promise<Result[]> => {
   return jsonData.data.map(normaliseResult);
 };
 
-export const fetchResultLinks = async(resultId: string): Promise<ResultLink[]> => {
+export const fetchResultLinks = async (
+  resultId: string
+): Promise<ResultLink[]> => {
   const res = await fetch(`${baseUrl}/results/${resultId}/links`, {
     headers: {
       "Content-Type": "application/json",
@@ -107,9 +114,11 @@ export const fetchResultLinks = async(resultId: string): Promise<ResultLink[]> =
   }
 
   return jsonData.data.map(normaliseResultLink);
-}
+};
 
-export const fetchResultInfo = async(resultId: string): Promise<ResultInfo> => {
+export const fetchResultInfo = async (
+  resultId: string
+): Promise<ResultInfo> => {
   const res = await fetch(`${baseUrl}/results/${resultId}/info`, {
     headers: {
       "Content-Type": "application/json",
@@ -123,10 +132,12 @@ export const fetchResultInfo = async(resultId: string): Promise<ResultInfo> => {
     throw new Error(`failed to fetch result info for result: ${resultId}`);
   }
 
-  return normaliseResultInfo(jsonData.data)
-}
+  return normaliseResultInfo(jsonData.data);
+};
 
-export const fetchResultEntities = async(resultId: string): Promise<ResultEntity[]> => {
+export const fetchResultEntities = async (
+  resultId: string
+): Promise<ResultEntity[]> => {
   const res = await fetch(`${baseUrl}/results/${resultId}/entities`, {
     headers: {
       "Content-Type": "application/json",
@@ -140,10 +151,14 @@ export const fetchResultEntities = async(resultId: string): Promise<ResultEntity
     throw new Error(`failed to fetch result entities for result: ${resultId}`);
   }
 
-  return jsonData.data.map(normaliseResultEntity).sort((a, b) => a.confidenceScore > b.confidenceScore ? -1 : 1);
-}
+  return jsonData.data
+    .map(normaliseResultEntity)
+    .sort((a, b) => (a.confidenceScore > b.confidenceScore ? -1 : 1));
+};
 
-export const fetchResultTopics = async(resultId: string): Promise<ResultTopic[]> => {
+export const fetchResultTopics = async (
+  resultId: string
+): Promise<ResultTopic[]> => {
   const res = await fetch(`${baseUrl}/results/${resultId}/topics`, {
     headers: {
       "Content-Type": "application/json",
@@ -157,8 +172,36 @@ export const fetchResultTopics = async(resultId: string): Promise<ResultTopic[]>
     throw new Error(`failed to fetch result topics for result: ${resultId}`);
   }
 
-  return jsonData.data.map(normaliseResultTopic).sort((a, b) => a.score > b.score ? -1 : 1);
-}
+  return jsonData.data
+    .map(normaliseResultTopic)
+    .sort((a, b) => (a.score > b.score ? -1 : 1));
+};
+
+export const similarityAnalysis = async (
+  keyword1: string,
+  keyword2: string
+): Promise<SimilarityAnalysis> => {
+  const res = await fetch(`${baseUrl}/similarity-analysis`, {
+    headers: {
+      "Content-Type": "application/json",
+    },
+    method: "POST",
+    body: JSON.stringify({
+      keyword1,
+      keyword2,
+    }),
+  });
+
+  const jsonData: SimilarityAnalysisResponse = await res.json();
+
+  if (!res.ok) {
+    throw new Error(
+      `failed to get similarity analysis for keywords: ${keyword1} and ${keyword2}`
+    );
+  }
+
+  return normaliseSimilarityAnalaysis(jsonData);
+};
 
 const normaliseCrawl = (c: APICrawl): Crawl => ({
   id: c.id,
@@ -178,7 +221,7 @@ const normaliseResult = (r: APIResult): Result => ({
   position: r.position,
   done: r.done,
   isError: r.is_error,
-  createdAt: new Date(r.created_at)
+  createdAt: new Date(r.created_at),
 });
 
 const normaliseResultLink = (r: APIResultLink): ResultLink => ({
@@ -186,7 +229,7 @@ const normaliseResultLink = (r: APIResultLink): ResultLink => ({
   resultId: r.result_id,
   text: r.text,
   linkUrl: r.link_url,
-  createdAt: new Date(r.created_at)
+  createdAt: new Date(r.created_at),
 });
 
 const normaliseResultInfo = (r: APIResultInfo): ResultInfo => ({
@@ -213,3 +256,32 @@ const normaliseResultTopic = (r: APIResultTopic): ResultTopic => ({
   label: r.label,
   score: r.score,
 });
+
+const normaliseSimilarityResult = (
+  r: APISimilarityResult
+): SimilarityResult => ({
+  averagePosition: r.average_position,
+  seenCount: r.seen_count,
+  title: r.title,
+});
+
+const normaliseSimilarityAnalaysis = (
+  r: SimilarityAnalysisResponse
+): SimilarityAnalysis => {
+  const keyword1Similarity: SimilarityKeyword = {
+    keyword: r.keyword1_similarity.keyword,
+    results: r.keyword1_similarity.similarity_results.map(normaliseSimilarityResult),
+  };
+
+  const keyword2Similarity: SimilarityKeyword = {
+    keyword: r.keyword2_similarity.keyword,
+    results: r.keyword2_similarity.similarity_results.map(normaliseSimilarityResult),
+  };
+
+  return {
+    keyword1Similarity: keyword1Similarity,
+    keyword2Similarity: keyword2Similarity,
+    locations: r.locations,
+    country: r.country,
+  };
+};
