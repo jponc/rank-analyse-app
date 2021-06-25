@@ -10,6 +10,7 @@ export type RootStackParamList = {
   Result: {
     id: string;
   };
+  Similarity: undefined;
 };
 
 // Home
@@ -38,6 +39,13 @@ export type ResultScreenRouteProp = RouteProp<RootStackParamList, "Result">;
 export type ResultScreenNavigationProp = StackNavigationProp<
   RootStackParamList,
   "Result"
+>;
+
+// Similarity
+export type SimilarityScreenRouteProp = RouteProp<RootStackParamList, "Similarity">;
+export type SimilarityScreenNavigationProp = StackNavigationProp<
+  RootStackParamList,
+  "Similarity"
 >;
 
 // Internal Types

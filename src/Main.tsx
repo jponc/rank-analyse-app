@@ -13,6 +13,7 @@ const config = {
     Crawls: "crawls",
     Crawl: "crawls/:id",
     Result: "results/:id",
+    Similarity: "similarity-analysis",
   },
 };
 
