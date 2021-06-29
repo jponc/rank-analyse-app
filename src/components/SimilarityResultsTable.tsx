@@ -5,12 +5,17 @@ import { theme } from "../core/theme";
 import { SimilarityKeyword, SimilarityResult } from "../types";
 
 type Props = {
+  minSeenCount: number;
   similarityKeyword: SimilarityKeyword;
 };
 
 export const SimilarityResultsTable: React.FC<Props> = ({
+  minSeenCount,
   similarityKeyword,
 }) => {
+
+  const filteredResults = similarityKeyword.results.filter(r => r.seenCount >= minSeenCount)
+
   return (
     <View style={styles.container}>
       <View>
@@ -26,7 +31,7 @@ export const SimilarityResultsTable: React.FC<Props> = ({
             <DataTable.Title style={styles.seenColumn}>Seen</DataTable.Title>
           </DataTable.Header>
 
-          {similarityKeyword.results.map((r: SimilarityResult) => (
+          {filteredResults.map((r: SimilarityResult) => (
             <DataTable.Row key={r.title}>
               <DataTable.Cell style={styles.titleColumn}>
                 <View style={styles.titleContent}>

@@ -20,12 +20,26 @@ type Props = {
 };
 
 export const SimilarityScreen: React.FC<Props> = ({ navigation }) => {
-  const { similarityAnalysis, compareSimilarity, isSimilarityAnalysisLoading } = useContext(SimilarityContext)
+  const {
+    similarityAnalysis,
+    compareSimilarity,
+    isSimilarityAnalysisLoading,
+  } = useContext(SimilarityContext);
   const [keyword1, setKeyword1] = useState<string>("");
   const [keyword2, setKeyword2] = useState<string>("");
+  const [minSeenText, setMinSeenText] = useState<string>("");
+  const [minSeen, setMinSeen] = useState<number>(0);
 
   const handleOnCompare = () => {
-    compareSimilarity(keyword1, keyword2)
+    compareSimilarity(keyword1, keyword2);
+  };
+
+  const handleFilterMinSeenCountResults = () => {
+    if (minSeenText === "") {
+      setMinSeen(0);
+    } else {
+      setMinSeen(parseInt(minSeenText))
+    }
   };
 
   let styles: any = { ...mobileStyles };
@@ -41,32 +55,60 @@ export const SimilarityScreen: React.FC<Props> = ({ navigation }) => {
         <Appbar.Content title="Similarity Analysis" />
       </Appbar>
       <Background>
-        <View style={styles.inputsContainer}>
-          <TextInput
-            label="First Keyword"
-            value={keyword1}
-            onChangeText={(text) => setKeyword1(text)}
-            style={styles.keywordInput}
-          />
-          <TextInput
-            label="Second Keyword"
-            value={keyword2}
-            onChangeText={(text) => setKeyword2(text)}
-            style={styles.keywordInput}
-          />
+        <View style={styles.topList}>
+          <View style={styles.inputsContainer}>
+            <TextInput
+              label="First Keyword"
+              value={keyword1}
+              onChangeText={(text) => setKeyword1(text)}
+              style={styles.keywordInput}
+            />
+            <TextInput
+              label="Second Keyword"
+              value={keyword2}
+              onChangeText={(text) => setKeyword2(text)}
+              style={styles.keywordInput}
+            />
 
-          <Button mode="contained" onPress={handleOnCompare} loading={isSimilarityAnalysisLoading} disabled={isSimilarityAnalysisLoading}>
-            Compare
-          </Button>
+            <Button
+              mode="contained"
+              onPress={handleOnCompare}
+              loading={isSimilarityAnalysisLoading}
+              disabled={isSimilarityAnalysisLoading}
+            >
+              Compare
+            </Button>
+          </View>
+          <View style={styles.filtersContainer}>
+            <TextInput
+              label="Minimum number of seen count (default all)"
+              value={minSeenText}
+              onChangeText={(text) => setMinSeenText(text)}
+              style={styles.keywordInput}
+            />
+
+            <Button
+              mode="contained"
+              onPress={handleFilterMinSeenCountResults}
+            >
+              Filter
+            </Button>
+          </View>
         </View>
 
         {similarityAnalysis && (
           <View style={styles.tablesContainer}>
             <View style={styles.tableContainer}>
-              <SimilarityResultsTable similarityKeyword={similarityAnalysis.keyword1Similarity} />
+              <SimilarityResultsTable
+                minSeenCount={minSeen}
+                similarityKeyword={similarityAnalysis.keyword1Similarity}
+              />
             </View>
             <View style={styles.tableContainer}>
-              <SimilarityResultsTable similarityKeyword={similarityAnalysis.keyword2Similarity} />
+              <SimilarityResultsTable
+                minSeenCount={minSeen}
+                similarityKeyword={similarityAnalysis.keyword2Similarity}
+              />
             </View>
           </View>
         )}
@@ -76,13 +118,21 @@ export const SimilarityScreen: React.FC<Props> = ({ navigation }) => {
 };
 
 const mobileStyles = StyleSheet.create({
+  topList: {
+    display: "flex",
+    flexDirection: "column",
+  },
   inputsContainer: {
     backgroundColor: theme.colors.surface,
     padding: 10,
   },
   keywordInput: {
-    marginBottom: 10,
+    marginBottom: 30,
     backgroundColor: theme.colors.surface,
+  },
+  filtersContainer: {
+    backgroundColor: theme.colors.surface,
+    padding: 10,
   },
   appbar: {
     top: 0,
@@ -92,12 +142,23 @@ const mobileStyles = StyleSheet.create({
 });
 
 const largeStyles = StyleSheet.create({
+  topList: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
   tablesContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
   },
   tableContainer: {
     width: "49%",
+  },
+  filtersContainer: {
+    backgroundColor: theme.colors.surface,
+    padding: 10,
+    width: "49%",
+    marginBottom: 30,
   },
   inputsContainer: {
     backgroundColor: theme.colors.surface,
