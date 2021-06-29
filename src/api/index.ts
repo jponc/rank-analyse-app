@@ -263,6 +263,7 @@ const normaliseSimilarityResult = (
   averagePosition: r.average_position,
   seenCount: r.seen_count,
   title: r.title,
+  link: r.link,
 });
 
 const normaliseSimilarityAnalaysis = (

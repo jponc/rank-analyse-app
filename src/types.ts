@@ -122,6 +122,7 @@ export type SimilarityResult = {
   averagePosition: number;
   seenCount: number;
   title: string;
+  link: string;
 }
 
 // Response Types
@@ -228,4 +229,5 @@ export type APISimilarityResult = {
   average_position: number;
   seen_count: number;
   title: string;
+  link: string;
 };
