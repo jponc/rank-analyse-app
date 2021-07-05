@@ -1,54 +1,107 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { View, StyleSheet } from "react-native";
-import { DataTable, Title, Paragraph } from "react-native-paper";
+import { DataTable, Title, Checkbox, Paragraph } from "react-native-paper";
+import { SimilarityMapType } from "../contexts/SimilarityContext";
 import { theme } from "../core/theme";
 import { SimilarityKeyword, SimilarityResult } from "../types";
 
 type Props = {
   minSeenCount: number;
   similarityKeyword: SimilarityKeyword;
+  similarityMap: SimilarityMapType;
+  selectedTitle: string;
+  onTitleSelect: (newTitle: string) => void;
+};
+
+type TableProps = {
+  results: SimilarityResult[];
+  similarityMap: SimilarityMapType;
+  selectedTitle: string;
+  onTitleSelect: (newTitle: string) => void;
+};
+
+const Table: React.FC<TableProps> = ({
+  results,
+  similarityMap,
+  selectedTitle,
+  onTitleSelect,
+}) => {
+  return (
+    <DataTable>
+      <DataTable.Header>
+        <DataTable.Title style={styles.checkboxColumn}>&nbsp;</DataTable.Title>
+        <DataTable.Title style={styles.titleColumn}>Title</DataTable.Title>
+        <DataTable.Title style={styles.positionColumn}>
+          Position
+        </DataTable.Title>
+        <DataTable.Title style={styles.seenColumn}>Seen</DataTable.Title>
+      </DataTable.Header>
+
+      {results.map((r: SimilarityResult) => {
+        const withMatch = similarityMap[r.title] > 1;
+        const isSelected = r.title === selectedTitle;
+        const checkbox = (
+          <Checkbox
+            status={isSelected ? "checked" : "unchecked"}
+            onPress={() => onTitleSelect(isSelected ? "" : r.title)}
+          />
+        );
+
+        return (
+          <DataTable.Row key={r.title}>
+            <DataTable.Cell style={styles.checkboxColumn}>
+              {withMatch && checkbox}
+            </DataTable.Cell>
+            <DataTable.Cell style={styles.titleColumn}>
+              <View style={styles.titleContent}>
+                <Paragraph style={styles.title}>{r.title}</Paragraph>
+                <Paragraph>{r.link}</Paragraph>
+              </View>
+            </DataTable.Cell>
+            <DataTable.Cell style={styles.positionColumn}>
+              {r.averagePosition.toFixed(2)}
+            </DataTable.Cell>
+            <DataTable.Cell style={styles.seenColumn}>
+              {r.seenCount}
+            </DataTable.Cell>
+          </DataTable.Row>
+        );
+      })}
+    </DataTable>
+  );
 };
 
 export const SimilarityResultsTable: React.FC<Props> = ({
   minSeenCount,
   similarityKeyword,
+  similarityMap,
+  selectedTitle,
+  onTitleSelect,
 }) => {
+  const filteredResults = similarityKeyword.results.filter(
+    (r) =>
+      r.seenCount >= minSeenCount &&
+      (selectedTitle === "" || selectedTitle === r.title)
+  );
 
-  const filteredResults = similarityKeyword.results.filter(r => r.seenCount >= minSeenCount)
+  const table = useMemo(
+    () => (
+      <Table
+        onTitleSelect={onTitleSelect}
+        selectedTitle={selectedTitle}
+        results={filteredResults}
+        similarityMap={similarityMap}
+      />
+    ),
+    [filteredResults, similarityMap]
+  );
 
   return (
     <View style={styles.container}>
       <View>
         <Title>{similarityKeyword.keyword}</Title>
       </View>
-      <View>
-        <DataTable>
-          <DataTable.Header>
-            <DataTable.Title style={styles.titleColumn}>Title</DataTable.Title>
-            <DataTable.Title style={styles.positionColumn}>
-              Position
-            </DataTable.Title>
-            <DataTable.Title style={styles.seenColumn}>Seen</DataTable.Title>
-          </DataTable.Header>
-
-          {filteredResults.map((r: SimilarityResult) => (
-            <DataTable.Row key={r.title}>
-              <DataTable.Cell style={styles.titleColumn}>
-                <View style={styles.titleContent}>
-                  <View style={styles.title}>{r.title}</View>
-                  <View>{r.link}</View>
-                </View>
-              </DataTable.Cell>
-              <DataTable.Cell style={styles.positionColumn}>
-                {r.averagePosition.toFixed(2)}
-              </DataTable.Cell>
-              <DataTable.Cell style={styles.seenColumn}>
-                {r.seenCount}
-              </DataTable.Cell>
-            </DataTable.Row>
-          ))}
-        </DataTable>
-      </View>
+      <View>{table}</View>
     </View>
   );
 };
@@ -58,6 +111,9 @@ const styles = StyleSheet.create({
     backgroundColor: theme.colors.surface,
     padding: 10,
   },
+  checkboxColumn: {
+    flex: 0.5,
+  },
   titleColumn: {
     flex: 4,
   },
@@ -65,8 +121,7 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "column",
   },
-  title: {
-  },
+  title: {},
   positionColumn: {
     flex: 1,
   },

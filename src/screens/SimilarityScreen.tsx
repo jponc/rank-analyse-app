@@ -22,6 +22,7 @@ type Props = {
 export const SimilarityScreen: React.FC<Props> = ({ navigation }) => {
   const {
     similarityAnalysis,
+    similarityMap,
     compareSimilarity,
     isSimilarityAnalysisLoading,
   } = useContext(SimilarityContext);
@@ -29,16 +30,21 @@ export const SimilarityScreen: React.FC<Props> = ({ navigation }) => {
   const [keyword2, setKeyword2] = useState<string>("");
   const [minSeenText, setMinSeenText] = useState<string>("");
   const [minSeen, setMinSeen] = useState<number>(0);
+  const [selectedTitle, setSelectedTitle] = useState<string>("");
 
   const handleOnCompare = () => {
     compareSimilarity(keyword1, keyword2);
+  };
+
+  const handleOnTitleSelect = (newTitle: string) => {
+    setSelectedTitle(newTitle);
   };
 
   const handleFilterMinSeenCountResults = () => {
     if (minSeenText === "") {
       setMinSeen(0);
     } else {
-      setMinSeen(parseInt(minSeenText))
+      setMinSeen(parseInt(minSeenText));
     }
   };
 
@@ -87,10 +93,7 @@ export const SimilarityScreen: React.FC<Props> = ({ navigation }) => {
               style={styles.keywordInput}
             />
 
-            <Button
-              mode="contained"
-              onPress={handleFilterMinSeenCountResults}
-            >
+            <Button mode="contained" onPress={handleFilterMinSeenCountResults}>
               Filter
             </Button>
           </View>
@@ -100,14 +103,20 @@ export const SimilarityScreen: React.FC<Props> = ({ navigation }) => {
           <View style={styles.tablesContainer}>
             <View style={styles.tableContainer}>
               <SimilarityResultsTable
+                selectedTitle={selectedTitle}
                 minSeenCount={minSeen}
+                similarityMap={similarityMap}
                 similarityKeyword={similarityAnalysis.keyword1Similarity}
+                onTitleSelect={handleOnTitleSelect}
               />
             </View>
             <View style={styles.tableContainer}>
               <SimilarityResultsTable
+                selectedTitle={selectedTitle}
                 minSeenCount={minSeen}
+                similarityMap={similarityMap}
                 similarityKeyword={similarityAnalysis.keyword2Similarity}
+                onTitleSelect={handleOnTitleSelect}
               />
             </View>
           </View>
