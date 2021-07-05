@@ -13,6 +13,7 @@ import {
 import { isLargeScreen } from "../core/screen";
 import { SimilarityContext } from "../contexts/SimilarityContext";
 import { SimilarityResultsTable } from "../components/SimilarityResultsTable";
+import { SimilarityPercentage } from "../components/SimilarityPercentage";
 
 type Props = {
   route: SimilarityScreenRouteProp;
@@ -97,6 +98,14 @@ export const SimilarityScreen: React.FC<Props> = ({ navigation }) => {
               Filter
             </Button>
           </View>
+          <View style={styles.percentageContainer}>
+            {similarityAnalysis && (
+              <SimilarityPercentage
+                similarityKeyword1={similarityAnalysis.keyword1Similarity}
+                similarityKeyword2={similarityAnalysis.keyword2Similarity}
+              />
+            )}
+          </View>
         </View>
 
         {similarityAnalysis && (
@@ -135,6 +144,10 @@ const mobileStyles = StyleSheet.create({
     backgroundColor: theme.colors.surface,
     padding: 10,
   },
+  percentageContainer: {
+    backgroundColor: theme.colors.surface,
+    padding: 10,
+  },
   keywordInput: {
     marginBottom: 30,
     backgroundColor: theme.colors.surface,
@@ -166,13 +179,19 @@ const largeStyles = StyleSheet.create({
   filtersContainer: {
     backgroundColor: theme.colors.surface,
     padding: 10,
-    width: "49%",
+    width: "33%",
     marginBottom: 30,
   },
   inputsContainer: {
     backgroundColor: theme.colors.surface,
     padding: 10,
-    width: "49%",
+    width: "33%",
+    marginBottom: 30,
+  },
+  percentageContainer: {
+    backgroundColor: theme.colors.surface,
+    padding: 10,
+    width: "33%",
     marginBottom: 30,
   },
 });
