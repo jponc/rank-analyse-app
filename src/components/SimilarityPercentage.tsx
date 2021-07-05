@@ -72,19 +72,19 @@ export const SimilarityPercentage: React.FC<Props> = ({
     <View style={styles.container}>
       <Paragraph>All: {allTopPercentage}%</Paragraph>
       <Paragraph>
-        Top 5: {top5Percentage}% (last 95 {remaining5Percentage}%)
+        Top 5: {top5Percentage}% (last 95: {remaining5Percentage}%)
       </Paragraph>
       <Paragraph>
-        Top 10: {top10Percentage}% (last 90 {remaining10Percentage}%)
+        Top 10: {top10Percentage}% (last 90: {remaining10Percentage}%)
       </Paragraph>
       <Paragraph>
-        Top 20: {top20Percentage}% (last 80 {remaining20Percentage}%)
+        Top 20: {top20Percentage}% (last 80: {remaining20Percentage}%)
       </Paragraph>
       <Paragraph>
-        Top 30: {top30Percentage}% (last 70 {remaining30Percentage}%)
+        Top 30: {top30Percentage}% (last 70: {remaining30Percentage}%)
       </Paragraph>
       <Paragraph>
-        Top 50: {top50Percentage}% (last 50 {remaining50Percentage}%)
+        Top 50: {top50Percentage}% (last 50: {remaining50Percentage}%)
       </Paragraph>
     </View>
   );
