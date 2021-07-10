@@ -103,6 +103,7 @@ export const SimilarityScreen: React.FC<Props> = ({ navigation }) => {
               <SimilarityPercentage
                 similarityKeyword1={similarityAnalysis.keyword1Similarity}
                 similarityKeyword2={similarityAnalysis.keyword2Similarity}
+                minSeenCount={minSeen}
               />
             )}
           </View>
@@ -125,7 +126,7 @@ export const SimilarityScreen: React.FC<Props> = ({ navigation }) => {
                 minSeenCount={minSeen}
                 similarityMap={similarityMap}
                 similarityKeyword={similarityAnalysis.keyword2Similarity}
-                handleOnLinkSelect={handleOnLinkSelect}
+                onLinkSelect={handleOnLinkSelect}
               />
             </View>
           </View>

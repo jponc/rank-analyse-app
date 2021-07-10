@@ -6,6 +6,7 @@ import { SimilarityKeyword, SimilarityResult } from "../types";
 type Props = {
   similarityKeyword1: SimilarityKeyword;
   similarityKeyword2: SimilarityKeyword;
+  minSeenCount: number;
 };
 
 type Percentage = {
@@ -16,10 +17,16 @@ type Percentage = {
 export const SimilarityPercentage: React.FC<Props> = ({
   similarityKeyword1,
   similarityKeyword2,
+  minSeenCount,
 }) => {
+
+  const results1 = similarityKeyword1.results.filter(r => r.seenCount >= minSeenCount);
+  const results2 = similarityKeyword2.results.filter(r => r.seenCount >= minSeenCount);
+
+
   const { topPercentage: allTopPercentage } = getSimilarityPercentage(
-    similarityKeyword1.results,
-    similarityKeyword2.results,
+    results1,
+    results2,
     100
   );
 
@@ -27,8 +34,8 @@ export const SimilarityPercentage: React.FC<Props> = ({
     topPercentage: top5Percentage,
     remainingPercentage: remaining5Percentage,
   } = getSimilarityPercentage(
-    similarityKeyword1.results,
-    similarityKeyword2.results,
+    results1,
+    results2,
     5
   );
 
@@ -36,8 +43,8 @@ export const SimilarityPercentage: React.FC<Props> = ({
     topPercentage: top10Percentage,
     remainingPercentage: remaining10Percentage,
   } = getSimilarityPercentage(
-    similarityKeyword1.results,
-    similarityKeyword2.results,
+    results1,
+    results2,
     10
   );
 
@@ -45,8 +52,8 @@ export const SimilarityPercentage: React.FC<Props> = ({
     topPercentage: top20Percentage,
     remainingPercentage: remaining20Percentage,
   } = getSimilarityPercentage(
-    similarityKeyword1.results,
-    similarityKeyword2.results,
+    results1,
+    results2,
     20
   );
 
@@ -63,8 +70,8 @@ export const SimilarityPercentage: React.FC<Props> = ({
     topPercentage: top50Percentage,
     remainingPercentage: remaining50Percentage,
   } = getSimilarityPercentage(
-    similarityKeyword1.results,
-    similarityKeyword2.results,
+    results1,
+    results2,
     50
   );
 
