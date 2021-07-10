@@ -31,14 +31,14 @@ export const SimilarityScreen: React.FC<Props> = ({ navigation }) => {
   const [keyword2, setKeyword2] = useState<string>("");
   const [minSeenText, setMinSeenText] = useState<string>("");
   const [minSeen, setMinSeen] = useState<number>(0);
-  const [selectedTitle, setSelectedTitle] = useState<string>("");
+  const [selectedLink, setSelectedLink] = useState<string>("");
 
   const handleOnCompare = () => {
     compareSimilarity(keyword1, keyword2);
   };
 
-  const handleOnTitleSelect = (newTitle: string) => {
-    setSelectedTitle(newTitle);
+  const handleOnLinkSelect = (newLink: string) => {
+    setSelectedLink(newLink);
   };
 
   const handleFilterMinSeenCountResults = () => {
@@ -112,20 +112,20 @@ export const SimilarityScreen: React.FC<Props> = ({ navigation }) => {
           <View style={styles.tablesContainer}>
             <View style={styles.tableContainer}>
               <SimilarityResultsTable
-                selectedTitle={selectedTitle}
+                selectedLink={selectedLink}
                 minSeenCount={minSeen}
                 similarityMap={similarityMap}
                 similarityKeyword={similarityAnalysis.keyword1Similarity}
-                onTitleSelect={handleOnTitleSelect}
+                onLinkSelect={handleOnLinkSelect}
               />
             </View>
             <View style={styles.tableContainer}>
               <SimilarityResultsTable
-                selectedTitle={selectedTitle}
+                selectedLink={selectedLink}
                 minSeenCount={minSeen}
                 similarityMap={similarityMap}
                 similarityKeyword={similarityAnalysis.keyword2Similarity}
-                onTitleSelect={handleOnTitleSelect}
+                handleOnLinkSelect={handleOnLinkSelect}
               />
             </View>
           </View>

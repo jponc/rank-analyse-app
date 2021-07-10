@@ -9,22 +9,22 @@ type Props = {
   minSeenCount: number;
   similarityKeyword: SimilarityKeyword;
   similarityMap: SimilarityMapType;
-  selectedTitle: string;
-  onTitleSelect: (newTitle: string) => void;
+  selectedLink: string;
+  onLinkSelect: (newLink: string) => void;
 };
 
 type TableProps = {
   results: SimilarityResult[];
   similarityMap: SimilarityMapType;
-  selectedTitle: string;
-  onTitleSelect: (newTitle: string) => void;
+  selectedLink: string;
+  onLinkSelect: (newLink: string) => void;
 };
 
 const Table: React.FC<TableProps> = ({
   results,
   similarityMap,
-  selectedTitle,
-  onTitleSelect,
+  selectedLink,
+  onLinkSelect,
 }) => {
   return (
     <DataTable>
@@ -38,17 +38,17 @@ const Table: React.FC<TableProps> = ({
       </DataTable.Header>
 
       {results.map((r: SimilarityResult) => {
-        const withMatch = similarityMap[r.title] > 1;
-        const isSelected = r.title === selectedTitle;
+        const withMatch = similarityMap[r.link] > 1;
+        const isSelected = r.link === selectedLink;
         const checkbox = (
           <Checkbox
             status={isSelected ? "checked" : "unchecked"}
-            onPress={() => onTitleSelect(isSelected ? "" : r.title)}
+            onPress={() => onLinkSelect(isSelected ? "" : r.link)}
           />
         );
 
         return (
-          <DataTable.Row key={r.title}>
+          <DataTable.Row key={r.link}>
             <DataTable.Cell style={styles.checkboxColumn}>
               {withMatch && checkbox}
             </DataTable.Cell>
@@ -75,20 +75,20 @@ export const SimilarityResultsTable: React.FC<Props> = ({
   minSeenCount,
   similarityKeyword,
   similarityMap,
-  selectedTitle,
-  onTitleSelect,
+  selectedLink,
+  onLinkSelect,
 }) => {
   const filteredResults = similarityKeyword.results.filter(
     (r) =>
       r.seenCount >= minSeenCount &&
-      (selectedTitle === "" || selectedTitle === r.title)
+      (selectedLink === "" || selectedLink === r.link)
   );
 
   const table = useMemo(
     () => (
       <Table
-        onTitleSelect={onTitleSelect}
-        selectedTitle={selectedTitle}
+        onLinkSelect={onLinkSelect}
+        selectedLink={selectedLink}
         results={filteredResults}
         similarityMap={similarityMap}
       />

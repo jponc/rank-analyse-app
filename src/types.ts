@@ -109,8 +109,6 @@ export type ResultEntity = {
 export type SimilarityAnalysis = {
   keyword1Similarity: SimilarityKeyword;
   keyword2Similarity: SimilarityKeyword;
-  locations: string[];
-  country: string;
 };
 
 export type SimilarityKeyword = {
@@ -123,7 +121,7 @@ export type SimilarityResult = {
   seenCount: number;
   title: string;
   link: string;
-}
+};
 
 // Response Types
 export type GetCrawlsResponse = {
@@ -163,6 +161,15 @@ export type SimilarityAnalysisResponse = {
   keyword2_similarity: APISimilarityKeyword;
   locations: string[];
   country: string;
+};
+
+export type SimilarityAnalysisBatchResponse = {
+  batch_id: string;
+};
+
+export type SimilarityAnalysisBatchStatusResponse = {
+  keyword1_similarity: APISimilarityKeyword;
+  keyword2_similarity: APISimilarityKeyword;
 };
 
 // API Types

@@ -104,24 +104,24 @@ const getSimilarityPercentage = (
   const remainingTemp: { [k: string]: boolean } = {};
 
   results1Top.forEach((r) => {
-    topTemp[r.title] = true;
+    topTemp[r.link] = true;
   });
 
   results1Remaining.forEach((r) => {
-    remainingTemp[r.title] = true;
+    remainingTemp[r.link] = true;
   });
 
   let topCount = 0;
   let remainingCount = 0;
 
   results2Top.forEach((r) => {
-    if (topTemp[r.title]) {
+    if (topTemp[r.link]) {
       topCount++;
     }
   });
 
   results2Remaining.forEach((r) => {
-    if (remainingTemp[r.title]) {
+    if (remainingTemp[r.link]) {
       remainingCount++;
     }
   });

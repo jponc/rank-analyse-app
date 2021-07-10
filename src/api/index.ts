@@ -25,6 +25,8 @@ import {
   APISimilarityResult,
   SimilarityResult,
   SimilarityKeyword,
+  SimilarityAnalysisBatchResponse,
+  SimilarityAnalysisBatchStatusResponse,
 } from "../types";
 
 const baseUrl = Constants.manifest.extra!.apiBaseURL;
@@ -203,6 +205,57 @@ export const similarityAnalysis = async (
   return normaliseSimilarityAnalaysis(jsonData);
 };
 
+export const similarityAnalysisBatchStatus = async (
+  batchId: string,
+): Promise<SimilarityAnalysis> => {
+  const res = await fetch(`${baseUrl}/similarity-analysis-batch-status`, {
+    headers: {
+      "Content-Type": "application/json",
+    },
+    method: "POST",
+    body: JSON.stringify({
+      batch_id: batchId,
+    }),
+  });
+
+  const jsonData: SimilarityAnalysisBatchStatusResponse = await res.json();
+
+  if (!res.ok) {
+    throw new Error(
+      `failed to get status for batch: ${batchId}`
+    );
+  }
+
+  return normaliseSimilarityAnalaysisBatchStatus(jsonData);
+};
+
+export const similarityAnalysisBatch = async (
+  keyword1: string,
+  keyword2: string
+): Promise<string> => {
+  const res = await fetch(`${baseUrl}/similarity-analysis-batch`, {
+    headers: {
+      "Content-Type": "application/json",
+    },
+    method: "POST",
+    body: JSON.stringify({
+      keyword1,
+      keyword2,
+      client_id: "test",
+    }),
+  });
+
+  const jsonData: SimilarityAnalysisBatchResponse = await res.json();
+
+  if (!res.ok) {
+    throw new Error(
+      `failed to get similarity analysis for keywords: ${keyword1} and ${keyword2}`
+    );
+  }
+
+  return jsonData.batch_id;
+};
+
 const normaliseCrawl = (c: APICrawl): Crawl => ({
   id: c.id,
   keyword: c.keyword,
@@ -282,7 +335,24 @@ const normaliseSimilarityAnalaysis = (
   return {
     keyword1Similarity: keyword1Similarity,
     keyword2Similarity: keyword2Similarity,
-    locations: r.locations,
-    country: r.country,
+  };
+};
+
+const normaliseSimilarityAnalaysisBatchStatus = (
+  r: SimilarityAnalysisBatchStatusResponse
+): SimilarityAnalysis => {
+  const keyword1Similarity: SimilarityKeyword = {
+    keyword: r.keyword1_similarity.keyword,
+    results: r.keyword1_similarity.similarity_results.map(normaliseSimilarityResult),
+  };
+
+  const keyword2Similarity: SimilarityKeyword = {
+    keyword: r.keyword2_similarity.keyword,
+    results: r.keyword2_similarity.similarity_results.map(normaliseSimilarityResult),
+  };
+
+  return {
+    keyword1Similarity: keyword1Similarity,
+    keyword2Similarity: keyword2Similarity,
   };
 };
